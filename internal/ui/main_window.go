@@ -5,10 +5,8 @@ import (
 	"bank_service/internal/repository"
 	"bank_service/internal/utils"
 	"bank_service/pkg/db"
-	"fmt"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 )
 
@@ -37,15 +35,8 @@ type Utils struct {
 	ExportManager *utils.ExportManager
 }
 
-func NewMainWindow() (*MainWindow, error) {
-	cfg := config.Load()
-	if err := db.Init(cfg); err != nil {
-		return nil, fmt.Errorf("failed to initialize database: %w", err)
-	}
-
-	myApp := app.New()
-	myApp.Settings().SetTheme(&CustomTheme{})
-	window := myApp.NewWindow("Банковская система")
+func NewMainWindow(a fyne.App, cfg *config.Config) *MainWindow {
+	window := a.NewWindow("Банковская система")
 	window.Resize(fyne.NewSize(1200, 800))
 
 	repos := &Repositories{
@@ -66,14 +57,18 @@ func NewMainWindow() (*MainWindow, error) {
 	}
 
 	mw := &MainWindow{
-		app:    myApp,
+		app:    a,
 		window: window,
 		repos:  repos,
 		utils:  utils,
 	}
 
 	mw.setupUI()
-	return mw, nil
+	return mw
+}
+
+func (mw *MainWindow) Show() {
+	mw.window.Show()
 }
 
 func (mw *MainWindow) setupUI() {
