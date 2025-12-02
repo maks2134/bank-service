@@ -4,7 +4,7 @@
 
 ## Требования
 
-- Go 1.21+
+- Go 1.25+
 - PostgreSQL 15+
 - Docker и Docker Compose (для запуска БД)
 
